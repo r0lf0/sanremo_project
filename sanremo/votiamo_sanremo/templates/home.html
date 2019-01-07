@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+        .jumbotron {
+            margin: 20px;
+            padding: 10px;
+        }
+        .card {
+            margin: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    Votiamo Sanremo
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+
+        <nav class="navbar navbar-dark bg-dark">
+            <span class="navbar-brand">Votiamo Sanremo</span>
+            <a type="button" class="btn btn-light" href="{% url 'logout' %}">Esci</a>
+        </nav>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="jumbotron col-sm-6">
+                    <h4 class="text-center">Benvenuto <br> {{ user.first_name }} {{ user.last_name }}</h4>
+                </div>
+            </div>
+        </div>
+        {% for concorrente in concorrenti %}
+            <div class="card">
+                <button class="card-header text-left btn collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapse{{ concorrente.id }}">
+                    <h5>{{ concorrente.nome }}</h5>
+                </button>
+                <div id="collapse{{ concorrente.id }}" class="collapse">
+                    <div class="card-body">
+                        <h5 class="card-title">Canzone: <strong>{{ concorrente.canzone }}</strong></h5>
+                        <div>
+                            {% for voto in voti %}
+                                {% if voto.concorrente_id == concorrente.id %}
+                                    <p>Canzone: {{ voto.voto_canzone }}</p>
+                                    <p>Interpretazione: {{ voto.voto_interpretazione }}</p>
+                                    <p>Outfit: {{ voto.voto_outfit }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="text-right"><a href="{% url 'vota' concorrente.id%}" class="btn btn-dark ">Vota</a></div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+
+    {% else %}
+
+        <nav class="navbar navbar-dark bg-dark">
+            <span class="navbar-brand">Votiamo Sanremo</span>
+        </nav>
+        <div class="jumbotron text-center">
+            <h3 style="padding-bottom: 20px">Non hai effettuato l'accesso</h3>
+            <a type="button" class="btn btn-light" href="{% url 'login' %}">Accedi ora</a>
+        </div>
+
+    {% endif %}
+{% endblock %}

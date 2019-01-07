@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+        .jumbotron {
+            margin: 20px;
+            padding: 10px;
+        }
+        .card {
+            margin: 5px;
+        }
+        .fieldWrapper input {
+            width: 70px;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    Votiamo Sanremo
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand" href="{% url 'home' %}">Votiamo Sanremo</a>
+            <a type="button" class="btn btn-light" href="{% url 'logout' %}">Esci</a>
+        </nav>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="jumbotron col-sm-6">
+                    <h4 class="text-center">{{ user.first_name }} {{ user.last_name }}<br>Scheda di votazione</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header text-left">
+                <h5>{{ concorrente.nome }}</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Canzone: <strong>{{ concorrente.canzone }}</strong></h5>
+                <form action="{% url 'vota' concorrente.id%}" method="post">
+                    {% csrf_token %}
+                    <div class="fieldWrapper"><p>
+                        {{ form.voto_canzone.errors }}
+                        <label for="{{ form.voto_canzone.id_for_label }}">Canzone: </label>
+                        {{ form.voto_canzone }}</p>
+                    </div>
+                    <div class="fieldWrapper"><p>
+                        {{ form.voto_interpretazione.errors }}
+                        <label for="{{ form.voto_interpretazione.id_for_label }}">Interpretazione: </label>
+                        {{ form.voto_interpretazione }}</p>
+                    </div>
+                    <div class="fieldWrapper"><p>
+                        {{ form.voto_outfit.errors }}
+                        <label for="{{ form.voto_outfit.id_for_label }}">Outfit: </label>
+                        {{ form.voto_outfit }}</p>
+                    </div>
+                    <div class="text-right"><input class="btn btn-dark" type="submit" value="Conferma"></div>
+                </form>
+            </div>
+        </div>
+
+    {% else %}
+
+        <nav class="navbar navbar-dark bg-dark">
+            <span class="navbar-brand">Votiamo Sanremo</span>
+        </nav>
+        <div class="jumbotron text-center">
+            <h3 style="padding-bottom: 20px">Non hai effettuato l'accesso</h3>
+            <a type="button" class="btn btn-light" href="{% url 'login' %}">Accedi ora</a>
+        </div>
+
+    {% endif %}
+{% endblock %}

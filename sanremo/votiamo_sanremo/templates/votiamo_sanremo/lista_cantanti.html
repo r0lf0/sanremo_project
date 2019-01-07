@@ -1,0 +1,9 @@
+{% if cantanti %}
+    <ul>
+    {% for cantante in cantanti %}
+        <li>{{ cantante.nome }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Nessun cantante.</p>
+{% endif %}
